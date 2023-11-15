@@ -319,8 +319,11 @@ func (conn *Conn) inWorker() {
 						conn.namesLck.Lock()
 						for i, v := range conn.names {
 							if v == name {
-								conn.names = append(conn.names[:i],
-									conn.names[i+1:]...)
+								if len(conn.names) == 1 {
+									conn.names = conn.names[:0]
+								} else {
+									conn.names = append(conn.names[:i], conn.names[i+1:]...)
+								}
 							}
 						}
 						conn.namesLck.Unlock()
